@@ -33,7 +33,7 @@ public class HangmanEngine
         
         for (var i = 0; i < _correctWord.Length; i++)
         {
-            if (!_correctWord[i].Equals(char.ToUpperInvariant(guess))) 
+            if (!_correctWord[i].Equals(guess)) 
                 continue;
             
             isCorrectGuess = true;
