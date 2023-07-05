@@ -5,7 +5,7 @@ public class HangmanEngine
     private readonly int _allowedGuesses;
     private readonly char[] _correctWord;
     private readonly char?[] _wordProgress;
-    private readonly List<Guess> _previousGuesses;
+    private readonly List<GuessResult> _previousGuesses;
 
     private int _failedGuesses;
 
@@ -15,15 +15,15 @@ public class HangmanEngine
         _correctWord = correctWord.Select(char.ToUpperInvariant).ToArray();
         _wordProgress = new char?[_correctWord.Length];
         _failedGuesses = 0;
-        _previousGuesses = new List<Guess>();
+        _previousGuesses = new List<GuessResult>();
     }
 
-    public GuessResult Guess(char guessingChar)
+    public HangmanStatus Guess(char guessingChar)
     {
         var guess = char.ToUpperInvariant(guessingChar);
         
         if(_previousGuesses.Any(c => c.Character == guess))
-            return new GuessResult()
+            return new HangmanStatus()
             {
                 Victory = _wordProgress.All(c => c != null),
                 WordProgress = _wordProgress,
@@ -46,13 +46,13 @@ public class HangmanEngine
             _failedGuesses++;
         
         
-        _previousGuesses.Add(new Guess()
+        _previousGuesses.Add(new GuessResult()
         {
             Character = guess,
             WordContainsCharacter = isCorrectGuess
         });
 
-        return new GuessResult()
+        return new HangmanStatus()
         {
             Victory = _wordProgress.All(c => c != null),
             WordProgress = _wordProgress,
