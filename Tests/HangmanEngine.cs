@@ -6,15 +6,13 @@ public class HangmanEngine
     private readonly char[] _correctWord;
     private readonly char?[] _wordProgress;
     private readonly List<GuessResult> _previousGuesses;
-
-    private int _failedGuesses;
-
+    
     public HangmanEngine(string correctWord, int allowedGuesses)
     {
         _allowedGuesses = allowedGuesses;
         _correctWord = correctWord.Select(char.ToUpperInvariant).ToArray();
         _wordProgress = new char?[_correctWord.Length];
-        _failedGuesses = 0;
+
         _previousGuesses = new List<GuessResult>();
     }
 
@@ -27,7 +25,7 @@ public class HangmanEngine
             {
                 Victory = _wordProgress.All(c => c != null),
                 WordProgress = _wordProgress,
-                RemainingGuesses = _allowedGuesses - _failedGuesses,
+                RemainingGuesses = _allowedGuesses - _previousGuesses.Count(x => x.WordContainsCharacter == false),
                 Status = GetCurrentGameStatus()
             };
         
@@ -42,10 +40,6 @@ public class HangmanEngine
             _wordProgress[i] = guess;
         }
         
-        if(!isCorrectGuess)
-            _failedGuesses++;
-        
-        
         _previousGuesses.Add(new GuessResult()
         {
             Character = guess,
@@ -56,7 +50,7 @@ public class HangmanEngine
         {
             Victory = _wordProgress.All(c => c != null),
             WordProgress = _wordProgress,
-            RemainingGuesses = _allowedGuesses - _failedGuesses,
+            RemainingGuesses = _allowedGuesses - _previousGuesses.Count(x => x.WordContainsCharacter == false),
             Status = GetCurrentGameStatus(),
             PreviousGuesses = _previousGuesses
         };
@@ -64,7 +58,7 @@ public class HangmanEngine
 
     private GameStatus GetCurrentGameStatus()
     {
-        if (_allowedGuesses == _failedGuesses)
+        if (_allowedGuesses == _previousGuesses.Count(x => x.WordContainsCharacter == false))
             return GameStatus.GameOver;
         
         if (_wordProgress.All(c => c != null))
