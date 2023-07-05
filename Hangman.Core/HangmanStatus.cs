@@ -1,4 +1,4 @@
-﻿namespace Tests;
+﻿namespace Hangman.Core;
 
 public class HangmanStatus
 {

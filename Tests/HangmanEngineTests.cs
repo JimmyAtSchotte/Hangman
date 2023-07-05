@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Hangman.Core;
+using NUnit.Framework;
 
 namespace Tests;
 
