@@ -12,7 +12,6 @@ public class HangmanEngine
         _allowedGuesses = allowedGuesses;
         _correctWord = correctWord.Select(char.ToUpperInvariant).ToArray();
         _wordProgress = new char?[_correctWord.Length];
-
         _previousGuesses = new List<GuessResult>();
     }
 
@@ -21,13 +20,7 @@ public class HangmanEngine
         var guess = char.ToUpperInvariant(guessingChar);
         
         if(_previousGuesses.Any(c => c.Character == guess))
-            return new HangmanStatus()
-            {
-                Victory = _wordProgress.All(c => c != null),
-                WordProgress = _wordProgress,
-                RemainingGuesses = _allowedGuesses - _previousGuesses.Count(x => x.WordContainsCharacter == false),
-                Status = GetCurrentGameStatus()
-            };
+            return CurrentHangmanStatus();
         
         var isCorrectGuess = false;
         
@@ -46,6 +39,11 @@ public class HangmanEngine
             WordContainsCharacter = isCorrectGuess
         });
 
+        return CurrentHangmanStatus();
+    }
+
+    private HangmanStatus CurrentHangmanStatus()
+    {
         return new HangmanStatus()
         {
             Victory = _wordProgress.All(c => c != null),
