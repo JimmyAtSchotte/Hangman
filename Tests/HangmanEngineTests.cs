@@ -70,4 +70,19 @@ public class HangmanEngineTests
         
         Assert.AreEqual(GameStatus.Victory, guessResult.Status);
     }
+    
+    [Test]
+    public void ListPreviousGuesses()
+    {
+        var game = new HangmanEngine("ac", 3);
+        game.Guess('b');
+        game.Guess('c');
+        var guessResult = game.Guess('d');
+        
+        Assert.AreEqual('B', guessResult.PreviousGuesses.ElementAt(0).Character);
+        Assert.IsFalse(guessResult.PreviousGuesses.ElementAt(0).WordContainsCharacter);
+        Assert.AreEqual('C', guessResult.PreviousGuesses.ElementAt(1).Character);
+        Assert.IsTrue(guessResult.PreviousGuesses.ElementAt(1).WordContainsCharacter);
+        
+    }
 }
