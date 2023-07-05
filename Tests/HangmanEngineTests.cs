@@ -11,7 +11,7 @@ public class HangmanEngineTests
         var game = new HangmanEngine("a", 2);
         var guessResult = game.Guess('a');
         
-        Assert.IsTrue(guessResult.Victory);
+        Assert.AreEqual(GameStatus.Victory, guessResult.Status);
     }
     
     [Test]
@@ -20,7 +20,7 @@ public class HangmanEngineTests
         var game = new HangmanEngine("a", 2);
         var guessResult = game.Guess('b');
         
-        Assert.IsFalse(guessResult.Victory);
+        Assert.AreEqual(GameStatus.KeepPlaying, guessResult.Status);
     }
     
     [Test]
@@ -29,9 +29,9 @@ public class HangmanEngineTests
         var game = new HangmanEngine("ab", 2);
         var guessResult = game.Guess('b');
         
-        Assert.IsFalse(guessResult.Victory);
         Assert.IsNull(guessResult.WordProgress[0]);
         Assert.AreEqual('b', guessResult.WordProgress[1]);
+        Assert.AreEqual(GameStatus.KeepPlaying, guessResult.Status);
     }
     
     [Test]
@@ -51,8 +51,9 @@ public class HangmanEngineTests
 
 public enum GameStatus
 {
-    Unknown,
-    GameOver
+    KeepPlaying,
+    Victory,
+    GameOver,
 }
 
 public class HangmanEngine
@@ -100,8 +101,11 @@ public class HangmanEngine
     {
         if (_allowedGuesses == _failedGuesses)
             return GameStatus.GameOver;
+        
+        if (_wordProgress.All(c => c != null))
+            return GameStatus.Victory;
 
-        return GameStatus.Unknown;
+        return GameStatus.KeepPlaying;
     }
 }
 
