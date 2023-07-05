@@ -42,10 +42,17 @@ public class HangmanEngineTests
         var guessResult2 = game.Guess('c');
         var guessResult3 = game.Guess('d');
         
-        Assert.AreEqual(guessResult1.RemainingGuesses, 2);
-        Assert.AreEqual(guessResult2.RemainingGuesses, 1);
-        Assert.AreEqual(guessResult3.RemainingGuesses, 0);
+        Assert.AreEqual(2, guessResult1.RemainingGuesses, 2);
+        Assert.AreEqual(1, guessResult2.RemainingGuesses, 1);
+        Assert.AreEqual(0, guessResult3.RemainingGuesses, 0);
+        Assert.AreEqual(GameStatus.GameOver, guessResult3.Status);
     }
+}
+
+public enum GameStatus
+{
+    Unknown,
+    GameOver
 }
 
 public class HangmanEngine
@@ -66,20 +73,35 @@ public class HangmanEngine
 
     public GuessResult Guess(char guess)
     {
+        var isCorrectGuess = false;
+        
         for (var i = 0; i < _correctWord.Length; i++)
         {
-            if (_correctWord[i].Equals(guess))
-                _wordProgress[i] = guess;
-            else
-                _failedGuesses++;
+            if (!_correctWord[i].Equals(guess)) 
+                continue;
+            
+            isCorrectGuess = true;
+            _wordProgress[i] = guess;
         }
+        
+        if(!isCorrectGuess)
+            _failedGuesses++;
 
         return new GuessResult()
         {
             Victory = _wordProgress.All(c => c != null),
             WordProgress = _wordProgress,
-            RemainingGuesses = _allowedGuesses - _failedGuesses
+            RemainingGuesses = _allowedGuesses - _failedGuesses,
+            Status = GetCurrentGameStatus()
         };
+    }
+
+    private GameStatus GetCurrentGameStatus()
+    {
+        if (_allowedGuesses == _failedGuesses)
+            return GameStatus.GameOver;
+
+        return GameStatus.Unknown;
     }
 }
 
@@ -88,4 +110,5 @@ public class GuessResult
     public bool Victory { get; set; }
     public char?[] WordProgress { get; set; }
     public int RemainingGuesses { get; set; }
+    public GameStatus Status { get; set; }
 }
