@@ -11,7 +11,7 @@ public class HangmanEngineTests
         var game = new HangmanEngine("a");
         var guessResult = game.Guess('a');
         
-        Assert.IsTrue(guessResult);
+        Assert.IsTrue(guessResult.Victory);
     }
     
     [Test]
@@ -20,7 +20,7 @@ public class HangmanEngineTests
         var game = new HangmanEngine("a");
         var guessResult = game.Guess('b');
         
-        Assert.IsFalse(guessResult);
+        Assert.IsFalse(guessResult.Victory);
     }
 }
 
@@ -33,8 +33,16 @@ public class HangmanEngine
         _correctWord = correctWord.ToCharArray();
     }
 
-    public bool Guess(char guess)
+    public GuessResult Guess(char guess)
     {
-        return _correctWord.Any(c => c == guess);
+        return new GuessResult()
+        {
+            Victory = _correctWord.Any(c => c == guess)
+        };
     }
+}
+
+public class GuessResult
+{
+    public bool Victory { get; set; }
 }
