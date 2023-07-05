@@ -3,12 +3,12 @@
 namespace Tests;
 
 [TestFixture]
-public class GameEngineTests
+public class HangmanEngineTests
 {
     [Test]
     public void CorrectWordGuess()
     {
-        var game = new GameEngine("a");
+        var game = new HangmanEngine("a");
         var guessResult = game.Guess('a');
         
         Assert.IsTrue(guessResult);
@@ -17,18 +17,18 @@ public class GameEngineTests
     [Test]
     public void UnmatchedCharGuess()
     {
-        var game = new GameEngine("a");
+        var game = new HangmanEngine("a");
         var guessResult = game.Guess('b');
         
         Assert.IsFalse(guessResult);
     }
 }
 
-public class GameEngine
+public class HangmanEngine
 {
     private readonly char[] _correctWord;
 
-    public GameEngine(string correctWord)
+    public HangmanEngine(string correctWord)
     {
         _correctWord = correctWord.ToCharArray();
     }
