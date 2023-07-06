@@ -6,6 +6,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<GameRepository>();
 
+builder.Services.AddHttpClient("api-ninjas", httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://api.api-ninjas.com/");
+    httpClient.DefaultRequestHeaders.Add("X-Api-Key", "lW3ouVXvR91ChLmxJfhFWg==jYGqgPjNohKSvfWq");
+});
+
 var app = builder.Build();
 
 app.UseSwagger();
