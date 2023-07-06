@@ -2,5 +2,5 @@
 
 public class Constants
 {
-    public const int AllowedGuesses = 10;
+    public const int AllowedGuesses = 8;
 }
