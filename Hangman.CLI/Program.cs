@@ -1,25 +1,33 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Hangman.Core;
+using Hangman.Core.Extensions;
+using Hangman.WebAPI;
 
-var guessesRemaining = 8;
-var hangmanEngine = new HangmanEngine("Hello World", guessesRemaining);
-var gameStatus = GameStatus.KeepPlaying;
 
-while (gameStatus == GameStatus.KeepPlaying)
+using var httpClient = new HttpClient();
+httpClient.BaseAddress = new Uri("https:\\\\localhost:7019");
+
+var hangmanGame = await httpClient.PostWithResponse<HangmanResponse>("/create-game", new object());
+
+Console.WriteLine(string.Join(" ", hangmanGame.WordProgress.Select(c => c ?? '_')));
+
+while (hangmanGame.Status == GameStatus.KeepPlaying)
 {
-    Console.WriteLine($"Make a guess (failed guesses remaining: {guessesRemaining})");
+    Console.WriteLine($"Make a guess (failed guesses remaining: {hangmanGame.RemainingGuesses})");
     var guess = Console.ReadLine().FirstOrDefault();
-
-    var hangmanStatus = hangmanEngine.Guess(guess);
-    gameStatus = hangmanStatus.Status;
-    guessesRemaining = hangmanStatus.RemainingGuesses;
     
-    switch (hangmanStatus.Status)
+    hangmanGame = await httpClient.PostWithResponse<HangmanResponse>("/guess", new GuessCommand()
+    {
+        GameId = hangmanGame.GameId,
+        Character = guess
+    });
+
+    switch (hangmanGame.Status)
     {
         case GameStatus.KeepPlaying:
-            Console.WriteLine(string.Join(" ", hangmanStatus.WordProgress.Select(c => c ?? '_')));
-            Console.WriteLine(string.Join(", ", hangmanStatus.PreviousGuesses.Select(x => x.Character)));
+            Console.WriteLine(string.Join(" ", hangmanGame.WordProgress.Select(c => c ?? '_')));
+            Console.WriteLine(string.Join(", ", hangmanGame.PreviousGuesses.Select(x => x.Character)));
             break;
         case GameStatus.Victory:
             Console.WriteLine("You won!");

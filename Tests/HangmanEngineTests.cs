@@ -1,4 +1,5 @@
 ﻿using Hangman.Core;
+using Hangman.Core.Entities;
 using NUnit.Framework;
 
 namespace Tests;
@@ -9,7 +10,10 @@ public class HangmanEngineTests
     [Test]
     public void CorrectWordGuess()
     {
-        var game = new HangmanEngine("a", 2);
+        var game = new HangmanEngine(new Game()
+        {
+            CorrectWord = "a"
+        });
         var guessResult = game.Guess('a');
         
         Assert.AreEqual(GameStatus.Victory, guessResult.Status);
@@ -18,7 +22,10 @@ public class HangmanEngineTests
     [Test]
     public void UnmatchedCharGuess()
     {
-        var game = new HangmanEngine("a", 2);
+        var game = new HangmanEngine(new Game()
+        {
+            CorrectWord = "a" 
+        });
         var guessResult = game.Guess('b');
         
         Assert.AreEqual(GameStatus.KeepPlaying, guessResult.Status);
@@ -27,7 +34,10 @@ public class HangmanEngineTests
     [Test]
     public void MatchedPartOfWord()
     {
-        var game = new HangmanEngine("ab", 2);
+        var game = new HangmanEngine(new Game()
+        {
+            CorrectWord = "ab" 
+        });
         var guessResult = game.Guess('b');
         
         Assert.IsNull(guessResult.WordProgress[0]);
@@ -38,35 +48,66 @@ public class HangmanEngineTests
     [Test]
     public void CountdownRemainingGuessesUntilGameOver()
     {
-        var game = new HangmanEngine("a", 3);
-        var guessResult1 = game.Guess('b');
-        var guessResult2 = game.Guess('c');
-        var guessResult3 = game.Guess('d');
-        
-        Assert.AreEqual(2, guessResult1.RemainingGuesses, 2);
-        Assert.AreEqual(1, guessResult2.RemainingGuesses, 1);
-        Assert.AreEqual(0, guessResult3.RemainingGuesses, 0);
-        Assert.AreEqual(GameStatus.GameOver, guessResult3.Status);
+        var game = new HangmanEngine(new Game()
+        {
+            CorrectWord = "a" 
+        });
+
+        var guesses = new[]
+        {
+            game.Guess('b'),
+            game.Guess('c'),
+            game.Guess('d'),
+            game.Guess('e'),
+            game.Guess('f'),
+            game.Guess('g'),
+            game.Guess('h'),
+            game.Guess('i'),
+            game.Guess('j'),
+            game.Guess('k'),
+        };
+
+        Assert.AreEqual(9, guesses[0].RemainingGuesses);
+        Assert.AreEqual(8, guesses[1].RemainingGuesses);
+        Assert.AreEqual(7, guesses[2].RemainingGuesses);
+        Assert.AreEqual(6, guesses[3].RemainingGuesses);
+        Assert.AreEqual(5, guesses[4].RemainingGuesses);
+        Assert.AreEqual(4, guesses[5].RemainingGuesses);
+        Assert.AreEqual(3, guesses[6].RemainingGuesses);
+        Assert.AreEqual(2, guesses[7].RemainingGuesses);
+        Assert.AreEqual(1, guesses[8].RemainingGuesses);
+        Assert.AreEqual(0, guesses[9].RemainingGuesses);
+        Assert.AreEqual(GameStatus.GameOver, guesses[9].Status);
     }
     
     [Test]
     public void MultipleGuessesOnSameCharacter()
     {
-        var game = new HangmanEngine("a", 3);
-        var guessResult1 = game.Guess('B');
-        var guessResult2 = game.Guess('b');
-        var guessResult3 = game.Guess('b');
+        var game = new HangmanEngine(new Game()
+        {
+            CorrectWord = "a" 
+        });
         
-        Assert.AreEqual(2, guessResult1.RemainingGuesses);
-        Assert.AreEqual(2, guessResult2.RemainingGuesses);
-        Assert.AreEqual(2, guessResult3.RemainingGuesses);
-        Assert.AreEqual(GameStatus.KeepPlaying, guessResult3.Status);
+        var guesses = new[]
+        {
+            game.Guess('b'),
+            game.Guess('b'),
+            game.Guess('B')
+        };
+        
+        Assert.AreEqual(9, guesses[0].RemainingGuesses);
+        Assert.AreEqual(9, guesses[1].RemainingGuesses);
+        Assert.AreEqual(9, guesses[2].RemainingGuesses);
+        Assert.AreEqual(GameStatus.KeepPlaying, guesses[2].Status);
     }
     
     [Test]
     public void IgnoreCase()
     {
-        var game = new HangmanEngine("a", 2);
+        var game = new HangmanEngine(new Game()
+        {
+            CorrectWord = "a" 
+        });
         var guessResult = game.Guess('A');
         
         Assert.AreEqual(GameStatus.Victory, guessResult.Status);
@@ -75,7 +116,10 @@ public class HangmanEngineTests
     [Test]
     public void ListPreviousGuesses()
     {
-        var game = new HangmanEngine("ac", 3);
+        var game = new HangmanEngine(new Game()
+        {
+            CorrectWord = "ac" 
+        });
         game.Guess('b');
         game.Guess('c');
         var guessResult = game.Guess('d');

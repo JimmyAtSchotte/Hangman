@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
+using Hangman.Core;
 using Hangman.Core.Extensions;
 using Hangman.WebAPI;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -31,11 +32,11 @@ public class APITests : IDisposable
     [Test]
     public async Task GuessToGame()
     {
-        var gameResponse = await _client.PostWithResponse<HangmanResponse>("/create-game", new EmptyObject());
+        var gameResponse = await _client.PostWithResponse<HangmanResponse>("/create-game", new object());
         
         var command = new GuessCommand()
         {
-            GameId = gameResponse.Guid,
+            GameId = gameResponse.GameId,
             Character = 'u'
         };
         
@@ -63,8 +64,4 @@ public class APITests : IDisposable
         _client.Dispose();
         _application.Dispose();
     }
-}
-
-public class EmptyObject
-{
 }

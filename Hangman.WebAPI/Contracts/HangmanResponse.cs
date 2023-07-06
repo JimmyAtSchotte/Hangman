@@ -2,9 +2,9 @@
 
 namespace Hangman.Core;
 
-public class HangmanStatus
+public class HangmanResponse
 {
-    public bool Victory { get; set; }
+    public Guid GameId { get; set; }
     public char?[] WordProgress { get; set; }
     public int RemainingGuesses { get; set; }
     public GameStatus Status { get; set; }

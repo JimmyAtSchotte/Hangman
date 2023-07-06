@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hangman.Core\Hangman.Core.csproj" />
+      <ProjectReference Include="..\Hangman.WebAPI\Hangman.WebAPI.csproj" />
     </ItemGroup>
 
 </Project>

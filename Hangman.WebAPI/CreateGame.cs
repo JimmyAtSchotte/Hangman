@@ -1,4 +1,5 @@
-﻿using Hangman.Core.Infrastructure;
+﻿using Hangman.Core;
+using Hangman.Core.Infrastructure;
 using Hangman.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,11 @@ public class CreateGame : Ardalis.ApiEndpoints.EndpointBaseAsync.WithoutRequest.
 
         return new HangmanResponse()
         {
-            Guid = game.Guid
+            GameId = game.Guid,
+            WordProgress = Enumerable.Repeat<char?>(default, game.CorrectWord.Length).ToArray(),
+            RemainingGuesses = HangmanEngine.AllowedGuesses,
+            Status = GameStatus.KeepPlaying,
+            PreviousGuesses = Enumerable.Empty<GuessResult>()
         };
     }
 }
