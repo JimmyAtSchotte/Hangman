@@ -8,5 +8,5 @@ public class HangmanResponse
     public char?[] WordProgress { get; set; }
     public int RemainingGuesses { get; set; }
     public GameStatus Status { get; set; }
-    public IEnumerable<GuessResult> PreviousGuesses { get; set; }
+    public IEnumerable<Guess> PreviousGuesses { get; set; }
 }

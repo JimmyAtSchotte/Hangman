@@ -37,7 +37,7 @@ public class CreateGame : Ardalis.ApiEndpoints.EndpointBaseAsync.WithoutRequest.
             WordProgress = Enumerable.Repeat<char?>(default, game.CorrectWord.Length).ToArray(),
             RemainingGuesses = HangmanEngine.AllowedGuesses,
             Status = GameStatus.KeepPlaying,
-            PreviousGuesses = Enumerable.Empty<GuessResult>()
+            PreviousGuesses = Enumerable.Empty<Core.Entities.Guess>()
         };
     }
 
