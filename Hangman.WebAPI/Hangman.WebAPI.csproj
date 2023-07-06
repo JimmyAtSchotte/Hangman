@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Ardalis.ApiEndpoints" Version="4.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hangman.CLI\Hangman.CLI.csproj" />
+      <ProjectReference Include="..\Hangman.Core\Hangman.Core.csproj" />
     </ItemGroup>
 
 </Project>
