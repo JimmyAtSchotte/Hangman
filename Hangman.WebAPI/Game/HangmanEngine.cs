@@ -21,10 +21,10 @@ public class HangmanEngine
     {
         var guess = char.ToUpperInvariant(guessingChar);
         
-        if(_game.PreviousGuesses.Any(c => c.Character == guess))
+        if(_game.Guesses.Any(c => c.Character == guess))
             return CurrentHangmanStatus();
 
-        foreach (var previousGuess in _game.PreviousGuesses.Where(x => x.WordContainsCharacter))
+        foreach (var previousGuess in _game.Guesses.Where(x => x.WordContainsCharacter))
         {
             for (var i = 0; i < _correctWord.Length; i++)
             {
@@ -46,7 +46,7 @@ public class HangmanEngine
             _wordProgress[i] = guess;
         }
         
-        _game.PreviousGuesses.Add(new GuessResult()
+        _game.Guesses.Add(new GuessResult()
         {
             Character = guess,
             WordContainsCharacter = isCorrectGuess
@@ -63,15 +63,15 @@ public class HangmanEngine
         {
             GameId = _game.Guid,
             WordProgress = gameStatus == GameStatus.GameOver ?  Array.ConvertAll(_correctWord, c => (char?)c) : _wordProgress,
-            RemainingGuesses = AllowedGuesses - _game.PreviousGuesses.Count(x => x.WordContainsCharacter == false),
+            RemainingGuesses = AllowedGuesses - _game.Guesses.Count(x => x.WordContainsCharacter == false),
             Status = gameStatus,
-            PreviousGuesses = _game.PreviousGuesses
+            PreviousGuesses = _game.Guesses
         };
     }
 
     private GameStatus GetCurrentGameStatus()
     {
-        if (AllowedGuesses == _game.PreviousGuesses.Count(x => x.WordContainsCharacter == false))
+        if (AllowedGuesses == _game.Guesses.Count(x => x.WordContainsCharacter == false))
             return GameStatus.GameOver;
         
         if (_wordProgress.All(c => c != null))
