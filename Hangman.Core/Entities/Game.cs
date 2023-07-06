@@ -42,7 +42,7 @@ public class Game
         var wordProgress = new char?[CorrectWord.Length];
         var correctWord = CorrectWord.Select(char.ToUpperInvariant).ToArray();
 
-        if (GetRemainingGuesses() == 0)
+        if (GetRemainingGuesses() <= 0)
             return Array.ConvertAll(correctWord, c => (char?)c);
         
         foreach (var guess in Guesses.Where(x => x.WordContainsCharacter).Select(x => x.Character))
@@ -61,7 +61,7 @@ public class Game
     
     public GameStatus GetCurrentGameStatus()
     {
-        if (GetRemainingGuesses() == 0)
+        if (GetRemainingGuesses() <= 0)
             return GameStatus.GameOver;
 
         if (GetWordProgress().All(c => c != null))
