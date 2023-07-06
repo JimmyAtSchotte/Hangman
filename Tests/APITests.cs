@@ -1,20 +1,51 @@
 ﻿using System.Net;
 using System.Text;
+using System.Text.Json;
+using Hangman.WebAPI;
 using Microsoft.AspNetCore.Mvc.Testing;
-using NUnit.Framework;
 
 namespace Tests;
 
 [TestFixture]
-public class APITests
+public class APITests : IDisposable
 {
+    private HttpClient _client;
+    private WebApplicationFactory<Program> _application;
+
+    [SetUp]
+    public void Setup()
+    {
+        _application = new WebApplicationFactory<Program>();
+        _client = _application.CreateClient();
+    }
+    
     [Test]
     public async Task CreateGame()
     {
-        await using var application = new WebApplicationFactory<Program>();
-        using var client = application.CreateClient();
- 
-        var response = await client.PostAsync("/create-game", new StringContent("{}", Encoding.UTF8, "application/json"));
+        var response = await _client.PostAsync("/create-game", new StringContent("{}", Encoding.UTF8, "application/json"));
         response.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task GuessToGame()
+    {
+        var gameResponse = await PostWithResponse<HangmanResponse>("/create-game", "{}");
+        var guessResponse = await _client.PostAsync("/guess", new StringContent("{}", Encoding.UTF8, "application/json"));
+        
+        guessResponse.EnsureSuccessStatusCode();
+    }
+
+    private async Task<T?> PostWithResponse<T>(string path, string json)
+    {
+        var response = await _client.PostAsync(path, new StringContent(json, Encoding.UTF8, "application/json"));
+        response.EnsureSuccessStatusCode();
+
+       return JsonSerializer.Deserialize<T>(await response.Content.ReadAsStringAsync());
+    }
+
+    public void Dispose()
+    {
+        _client.Dispose();
+        _application.Dispose();
     }
 }

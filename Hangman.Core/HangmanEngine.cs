@@ -1,4 +1,6 @@
-﻿namespace Hangman.Core;
+﻿using Hangman.Core.Entities;
+
+namespace Hangman.Core;
 
 public class HangmanEngine
 {
