@@ -23,7 +23,18 @@ public class HangmanEngine
         
         if(_game.PreviousGuesses.Any(c => c.Character == guess))
             return CurrentHangmanStatus();
-        
+
+        foreach (var previousGuess in _game.PreviousGuesses.Where(x => x.WordContainsCharacter))
+        {
+            for (var i = 0; i < _correctWord.Length; i++)
+            {
+                if (!_correctWord[i].Equals(previousGuess.Character)) 
+                    continue;
+            
+                _wordProgress[i] = previousGuess.Character;
+            }
+        }
+
         var isCorrectGuess = false;
         
         for (var i = 0; i < _correctWord.Length; i++)

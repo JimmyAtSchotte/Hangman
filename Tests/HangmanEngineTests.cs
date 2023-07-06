@@ -128,6 +128,22 @@ public class HangmanEngineTests
         Assert.IsFalse(guessResult.PreviousGuesses.ElementAt(0).WordContainsCharacter);
         Assert.AreEqual('C', guessResult.PreviousGuesses.ElementAt(1).Character);
         Assert.IsTrue(guessResult.PreviousGuesses.ElementAt(1).WordContainsCharacter);
+    }
+    
+    [Test]
+    public void KeepWordProgressStateStateBetweenInstances()
+    {
+        var game = new Game()
+        {
+            CorrectWord = "ac"
+        };
+
+        var engine1 = new HangmanEngine(game);
+        engine1.Guess('a');
         
+        var engine2 = new HangmanEngine(game);
+        var guessResult = engine2.Guess('b');
+        
+        Assert.AreEqual('A', guessResult.WordProgress.ElementAt(0).GetValueOrDefault());
     }
 }
