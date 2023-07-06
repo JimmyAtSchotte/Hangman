@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
+using Hangman.Core.Extensions;
 using Hangman.WebAPI;
 using Microsoft.AspNetCore.Mvc.Testing;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -30,7 +31,7 @@ public class APITests : IDisposable
     [Test]
     public async Task GuessToGame()
     {
-        var gameResponse = await PostWithResponse<HangmanResponse>("/create-game", "{}");
+        var gameResponse = await _client.PostWithResponse<HangmanResponse>("/create-game", new EmptyObject());
         
         var command = new GuessCommand()
         {
@@ -39,7 +40,7 @@ public class APITests : IDisposable
         };
         
         var guessResponse = await _client.PostAsync("/guess", new StringContent(JsonSerializer.Serialize(command), Encoding.UTF8, "application/json"));
-        var responseText = await guessResponse.Content.ReadAsStringAsync();
+ 
         guessResponse.EnsureSuccessStatusCode();
     }
     
@@ -56,23 +57,14 @@ public class APITests : IDisposable
         
         Assert.AreEqual(HttpStatusCode.NotFound, guessResponse.StatusCode);
     }
-    
-
-    private async Task<T?> PostWithResponse<T>(string path, string json)
-    {
-        var response = await _client.PostAsync(path, new StringContent(json, Encoding.UTF8, "application/json"));
-        response.EnsureSuccessStatusCode();
-        var responseText = await response.Content.ReadAsStringAsync();
-
-       return JsonSerializer.Deserialize<T>(responseText, new JsonSerializerOptions()
-       {
-           PropertyNameCaseInsensitive = true
-       });
-    }
 
     public void Dispose()
     {
         _client.Dispose();
         _application.Dispose();
     }
+}
+
+public class EmptyObject
+{
 }
