@@ -31,10 +31,14 @@ while (hangmanGame.Status == GameStatus.KeepPlaying)
             break;
         case GameStatus.Victory:
             Console.WriteLine("You won!");
+            Console.WriteLine("The secret word was");
+            Console.WriteLine(string.Join(" ", hangmanGame.WordProgress.Select(c => c ?? '_')));
             break;
         case GameStatus.GameOver:
             Console.WriteLine("You lost!");
             Console.WriteLine("Game over!");
+            Console.WriteLine("The secret word was");
+            Console.WriteLine(string.Join(" ", hangmanGame.WordProgress.Select(c => c ?? '_')));
             break;
         default:
             throw new ArgumentOutOfRangeException();

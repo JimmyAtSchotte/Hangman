@@ -78,6 +78,7 @@ public class HangmanEngineTests
         Assert.AreEqual(1, guesses[8].RemainingGuesses);
         Assert.AreEqual(0, guesses[9].RemainingGuesses);
         Assert.AreEqual(GameStatus.GameOver, guesses[9].Status);
+        Assert.AreEqual(new char?[] {'A'}, guesses[9].WordProgress);
     }
     
     [Test]

@@ -57,12 +57,14 @@ public class HangmanEngine
 
     private HangmanResponse CurrentHangmanStatus()
     {
+        var gameStatus = GetCurrentGameStatus();
+        
         return new HangmanResponse()
         {
             GameId = _game.Guid,
-            WordProgress = _wordProgress,
+            WordProgress = gameStatus == GameStatus.GameOver ?  Array.ConvertAll(_correctWord, c => (char?)c) : _wordProgress,
             RemainingGuesses = AllowedGuesses - _game.PreviousGuesses.Count(x => x.WordContainsCharacter == false),
-            Status = GetCurrentGameStatus(),
+            Status = gameStatus,
             PreviousGuesses = _game.PreviousGuesses
         };
     }
