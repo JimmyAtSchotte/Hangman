@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.19" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
@@ -18,6 +19,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hangman.Core\Hangman.Core.csproj" />
+      <ProjectReference Include="..\Hangman.WebAPI\Hangman.WebAPI.csproj" />
     </ItemGroup>
 
 </Project>
