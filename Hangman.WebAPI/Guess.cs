@@ -19,6 +19,7 @@ public class Guess : Ardalis.ApiEndpoints.EndpointBaseAsync.WithRequest<GuessCom
     [HttpPost]
     public override async Task<ActionResult<HangmanResponse>> HandleAsync(GuessCommand request, CancellationToken cancellationToken = new CancellationToken())
     {
+        
         var game = await _gameRepository.FindAsync(request.GameId, cancellationToken);
 
         if (game == null)

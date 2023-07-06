@@ -21,6 +21,7 @@ public class CreateGame : Ardalis.ApiEndpoints.EndpointBaseAsync.WithoutRequest.
     {
         var game = await _gameRepository.AddAsync(new Game()
         {
+            Guid = Guid.NewGuid(),
             CorrectWord = "Hello World"
         });
 

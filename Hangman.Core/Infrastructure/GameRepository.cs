@@ -8,7 +8,6 @@ public class GameRepository
 
     public Task<Game> AddAsync(Game game)
     {
-        game.Guid = new Guid();
         _games.Add(game);
         
         return Task.FromResult(game);

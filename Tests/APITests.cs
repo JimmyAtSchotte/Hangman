@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Hangman.WebAPI;
 using Microsoft.AspNetCore.Mvc.Testing;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Tests;
 
@@ -30,17 +31,43 @@ public class APITests : IDisposable
     public async Task GuessToGame()
     {
         var gameResponse = await PostWithResponse<HangmanResponse>("/create-game", "{}");
-        var guessResponse = await _client.PostAsync("/guess", new StringContent("{}", Encoding.UTF8, "application/json"));
         
+        var command = new GuessCommand()
+        {
+            GameId = gameResponse.Guid,
+            Character = 'u'
+        };
+        
+        var guessResponse = await _client.PostAsync("/guess", new StringContent(JsonSerializer.Serialize(command), Encoding.UTF8, "application/json"));
+        var responseText = await guessResponse.Content.ReadAsStringAsync();
         guessResponse.EnsureSuccessStatusCode();
     }
+    
+    [Test]
+    public async Task InvalidGameGuess()
+    {
+        var command = new GuessCommand()
+        {
+            GameId = Guid.NewGuid(),
+            Character = 'u'
+        };
+        
+        var guessResponse = await _client.PostAsync("/guess", new StringContent(JsonSerializer.Serialize(command), Encoding.UTF8, "application/json"));
+        
+        Assert.AreEqual(HttpStatusCode.NotFound, guessResponse.StatusCode);
+    }
+    
 
     private async Task<T?> PostWithResponse<T>(string path, string json)
     {
         var response = await _client.PostAsync(path, new StringContent(json, Encoding.UTF8, "application/json"));
         response.EnsureSuccessStatusCode();
+        var responseText = await response.Content.ReadAsStringAsync();
 
-       return JsonSerializer.Deserialize<T>(await response.Content.ReadAsStringAsync());
+       return JsonSerializer.Deserialize<T>(responseText, new JsonSerializerOptions()
+       {
+           PropertyNameCaseInsensitive = true
+       });
     }
 
     public void Dispose()
