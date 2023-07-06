@@ -25,4 +25,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+namespace Hangman.WebAPI
+{
+    public partial class Program { }
+}

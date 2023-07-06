@@ -31,14 +31,7 @@ public class CreateGame : Ardalis.ApiEndpoints.EndpointBaseAsync.WithoutRequest.
             CorrectWord = correctWord
         });
 
-        return new HangmanResponse()
-        {
-            GameId = game.Guid,
-            WordProgress = Enumerable.Repeat<char?>(default, game.CorrectWord.Length).ToArray(),
-            RemainingGuesses = HangmanEngine.AllowedGuesses,
-            Status = GameStatus.KeepPlaying,
-            PreviousGuesses = Enumerable.Empty<Core.Entities.Guess>()
-        };
+        return HangmanResponse.Create(game);
     }
 
     private async Task<string> GetRandomWord()

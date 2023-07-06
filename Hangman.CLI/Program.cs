@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Hangman.Core;
+using Hangman.Core.Entities;
 using Hangman.Core.Extensions;
 using Hangman.WebAPI;
 

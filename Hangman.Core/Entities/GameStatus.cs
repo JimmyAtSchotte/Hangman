@@ -1,4 +1,4 @@
-﻿namespace Hangman.Core;
+﻿namespace Hangman.Core.Entities;
 
 public enum GameStatus
 {

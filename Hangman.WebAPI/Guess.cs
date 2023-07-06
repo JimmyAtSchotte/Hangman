@@ -25,12 +25,11 @@ public class Guess : Ardalis.ApiEndpoints.EndpointBaseAsync.WithRequest<GuessCom
         if (game == null)
             return NotFound();
 
-        var gameEngine = new HangmanEngine(game);
-        var guessResult = gameEngine.Guess(request.Character);
-        
+        game.Guess(request.Character);
+
         await _gameRepository.SaveAsync(game, cancellationToken);
 
-        return guessResult;
+        return HangmanResponse.Create(game);
     }
 }
 

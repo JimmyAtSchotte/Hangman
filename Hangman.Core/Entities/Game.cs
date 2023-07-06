@@ -5,14 +5,13 @@ public class Game
     private List<Guess> _previousGuesses;
     public Guid Guid { get; set; }
     public string CorrectWord { get; set; }
-
     public List<Guess> Guesses
     {
         get => _previousGuesses ??= new List<Guess>();
         set => _previousGuesses = value;
     }
 
-    public void AddGuess(char guess)
+    public void Guess(char guess)
     {
         guess = char.ToUpperInvariant(guess);
         
@@ -42,6 +41,9 @@ public class Game
     {
         var wordProgress = new char?[CorrectWord.Length];
         var correctWord = CorrectWord.Select(char.ToUpperInvariant).ToArray();
+
+        if (GetRemainingGuesses() == 0)
+            return Array.ConvertAll(correctWord, c => (char?)c);
         
         foreach (var guess in Guesses.Where(x => x.WordContainsCharacter).Select(x => x.Character))
         {
