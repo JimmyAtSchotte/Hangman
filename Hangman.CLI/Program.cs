@@ -28,7 +28,7 @@ while (hangmanGame.Status == GameStatus.KeepPlaying)
     {
         case GameStatus.KeepPlaying:
             Console.WriteLine(string.Join(" ", hangmanGame.WordProgress.Select(c => c ?? '_')));
-            Console.WriteLine(string.Join(", ", hangmanGame.PreviousGuesses.Select(x => x.Character)));
+            Console.WriteLine(string.Join(", ", hangmanGame.Guesses.Select(x => x.Character)));
             break;
         case GameStatus.Victory:
             Console.WriteLine("You won!");

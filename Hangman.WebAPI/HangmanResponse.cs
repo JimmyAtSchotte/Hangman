@@ -8,7 +8,7 @@ public class HangmanResponse
     public char?[] WordProgress { get; set; }
     public int RemainingGuesses { get; set; }
     public GameStatus Status { get; set; }
-    public IEnumerable<Core.Entities.Guess> PreviousGuesses { get; set; }
+    public IEnumerable<Core.Entities.Guess> Guesses { get; set; }
 
     public static HangmanResponse Create(Game game)
     {
@@ -18,7 +18,7 @@ public class HangmanResponse
             WordProgress = game.GetWordProgress(),
             RemainingGuesses = game.GetRemainingGuesses(),
             Status = game.GetCurrentGameStatus(),
-            PreviousGuesses = game.Guesses
+            Guesses = game.Guesses
         };
     }
 }
