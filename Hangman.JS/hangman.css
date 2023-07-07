@@ -1,0 +1,14 @@
+﻿
+#game{
+    text-align: center;    
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li{
+    display: inline-block;
+    margin: 10pt;
+    font-size: 20pt;
+}
