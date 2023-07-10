@@ -1,4 +1,6 @@
-﻿
+﻿window.addEventListener("load", (event) => {
+    createGame();
+});
 
 const baseUrl = 'https://localhost:7019';
 const keepPlaying = 0;
@@ -88,8 +90,13 @@ function renderGuesses(game) {
     guesses.innerHTML = "";
 
     for (let i = 0; i < game.guesses.length; i++) {
-        const
-            guess = document.createElement("li");
+        const guess = document.createElement("li");
+
+        if (game.guesses[i].wordContainsCharacter)
+            guess.classList.add("correct");
+        else
+            guess.classList.add("wrong");           
+        
         guess.appendChild(document.createTextNode(game.guesses[i].character));
         guesses.appendChild(guess);
     }

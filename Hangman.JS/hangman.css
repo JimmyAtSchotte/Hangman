@@ -1,20 +1,38 @@
 ﻿body{
     background-color: #8aed66;
     font-family: "Verdana";
-    font-size: 20pt;
 }
 
 #game {
     text-align: center;    
 }
 
-ul {
-    list-style-type: none;
+#game .how-to-play {
+    font-size: 14pt;
 }
 
-ul li{
+#game .remaining-guesses {
+    font-size: 20pt;
+}
+
+#game ul {
+    list-style-type: none;
+    display: inline-block;
+    padding-inline-start: 0;
+}
+
+#game ul li{
     display: inline-block;
     padding: 10pt;
     margin: 2px;
     background-color: #FFFFFF;
+    font-size: 20pt;
+}
+
+#game ul li.correct{
+    background-color: #2fde38;    
+}
+
+#game ul li.wrong{
+    background-color:#de352f;
 }
