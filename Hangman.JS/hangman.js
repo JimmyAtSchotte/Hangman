@@ -1,4 +1,7 @@
 ﻿const baseUrl = 'https://localhost:7019';
+const keepPlaying = 0;
+const victory = 1;
+const gameOver = 2;
 
 function addGuessListner() {
     document.addEventListener('keyup', guess, false);
@@ -35,7 +38,16 @@ function guess(event)
     }));
 }
 
-
+function playAgain(game) {
+    switch (game.status) {
+        case victory:
+            return confirm("You won! Congratulations! Play again?")      
+        case gameOver:
+            return confirm("Game over. Correct word was " + game.wordProgress.join('') + ". Play again?")
+    }
+    
+    return false;
+}
 
 function render(game)
 {
@@ -44,8 +56,13 @@ function render(game)
     renderRemainingGuesses(game);
     renderGuesses(game);
     
-    if(game.status != 0)
-        removeGuessListner();
+    if(game.status === keepPlaying)
+        return;
+    
+    removeGuessListner();
+        
+    if(playAgain(game))
+        createGame();   
 }
 
 function setGameId(game) {
