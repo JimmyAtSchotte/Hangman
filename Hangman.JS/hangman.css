@@ -36,3 +36,8 @@
 #game ul li.wrong{
     background-color:#de352f;
 }
+
+#game .your-guesses
+{
+    display: none;
+}

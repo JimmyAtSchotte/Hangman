@@ -31,8 +31,9 @@ function guess(event)
 {
     const httpRequest = new XMLHttpRequest();
     httpRequest.responseType = 'json';
-    httpRequest.onload  = function() {
-        render(httpRequest.response);
+    httpRequest.onload  = function(response) {
+        if(response.target.status === 200)
+            render(httpRequest.response);
     };
     httpRequest.open("POST", baseUrl +'/guess', true);
     httpRequest.setRequestHeader("Content-Type", "application/json");
@@ -88,6 +89,11 @@ function renderWordProgress(game) {
 function renderGuesses(game) {
     const guesses = document.getElementById("guesses");
     guesses.innerHTML = "";
+    
+    if(game.guesses.length)
+        document.getElementById("your-guesses").style.display = "block";
+    else
+        document.getElementById("your-guesses").style.display = "none";
 
     for (let i = 0; i < game.guesses.length; i++) {
         const guess = document.createElement("li");
