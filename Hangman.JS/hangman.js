@@ -1,4 +1,6 @@
-﻿const baseUrl = 'https://localhost:7019';
+﻿
+
+const baseUrl = 'https://localhost:7019';
 const keepPlaying = 0;
 const victory = 1;
 const gameOver = 2;
