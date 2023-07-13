@@ -2,6 +2,7 @@
 using Hangman.Core;
 using Hangman.Core.Infrastructure;
 using Hangman.Core.Entities;
+using Hangman.Core.Types;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -28,7 +29,7 @@ public class CreateGame : Ardalis.ApiEndpoints.EndpointBaseAsync.WithoutRequest.
         var game = await _gameRepository.AddAsync(new Game()
         {
             Guid = Guid.NewGuid(),
-            CorrectWord = correctWord
+            CorrectWord = new Word(correctWord)
         });
 
         return HangmanResponse.Create(game);

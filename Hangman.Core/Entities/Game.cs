@@ -1,67 +1,59 @@
-﻿namespace Hangman.Core.Entities;
+﻿using Hangman.Core.Types;
+
+namespace Hangman.Core.Entities;
 
 public class Game
 {
-    private List<Guess> _previousGuesses;
-    public Guid Guid { get; set; }
-    public string CorrectWord { get; set; }
-    public List<Guess> Guesses
+    private List<char> _guesses;
+    public Guid Guid { get; init; }
+    public Word CorrectWord { get; init; }
+    public GameStatus GameStatus { get; private set; }
+    public int RemainingGuesses { get; private set; }
+
+    public List<char> Guesses
     {
-        get => _previousGuesses ??= new List<Guess>();
-        set => _previousGuesses = value;
+        get => _guesses ??= new List<char>();
+        set => _guesses = value;
+    }
+
+    public Game()
+    {
+        RemainingGuesses = Constants.AllowedGuesses;
+        GameStatus = GameStatus.KeepPlaying;
     }
 
     public void Guess(char guess)
     {
         guess = char.ToUpperInvariant(guess);
         
-        if(Guesses.Any(c => c.Character == guess))
-            return;
+        if(Guesses.All(c => c != guess))
+            Guesses.Add(guess);
 
-        var correctWord = CorrectWord.Select(char.ToUpperInvariant).ToArray();
-        
-        var isCorrectGuess = false;
-        
-        for (var i = 0; i < correctWord.Length; i++)
-        {
-            if (!correctWord[i].Equals(guess)) 
-                continue;
-            
-            isCorrectGuess = true;
-        }
-
-        Guesses.Add(new Guess()
-        {
-            Character = guess,
-            WordContainsCharacter = isCorrectGuess
-        });
+        RemainingGuesses = Constants.AllowedGuesses - Guesses.Count(c => !CorrectWord.ContainsChar(c));
+        GameStatus = GetCurrentGameStatus();
     }
 
     public char?[] GetWordProgress()
     {
-        var wordProgress = new char?[CorrectWord.Length];
-        var correctWord = CorrectWord.Select(char.ToUpperInvariant).ToArray();
-
-        if (GetRemainingGuesses() <= 0)
-            return Array.ConvertAll(correctWord, c => (char?)c);
+        if (RemainingGuesses <= 0)
+            return Array.ConvertAll(CorrectWord.ToCharArray(), c => (char?)c);
         
-        foreach (var guess in Guesses.Where(x => x.WordContainsCharacter).Select(x => x.Character))
+        var wordProgress = new char?[CorrectWord.Length];
+  
+        foreach (var guess in Guesses)
         {
-            for (var i = 0; i < CorrectWord.Length; i++)
-            {
-                if (!correctWord[i].Equals(guess)) 
-                    continue;
-            
-                wordProgress[i] = guess;
-            }
-        }
+            var correctIndexes = CorrectWord.FindIndexes(guess);
 
+            foreach (var correctIndex in correctIndexes)
+                wordProgress[correctIndex] = guess;
+        }
+        
         return wordProgress;
     }
     
-    public GameStatus GetCurrentGameStatus()
+    private GameStatus GetCurrentGameStatus()
     {
-        if (GetRemainingGuesses() <= 0)
+        if (RemainingGuesses <= 0)
             return GameStatus.GameOver;
 
         if (GetWordProgress().All(c => c != null))
@@ -70,8 +62,5 @@ public class Game
         return GameStatus.KeepPlaying;
     }
     
-    public int GetRemainingGuesses()
-    {
-        return Constants.AllowedGuesses - Guesses.Count(x => x.WordContainsCharacter == false);
-    }
+   
 }

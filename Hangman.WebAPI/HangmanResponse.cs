@@ -8,7 +8,7 @@ public class HangmanResponse
     public char?[] WordProgress { get; set; }
     public int RemainingGuesses { get; set; }
     public GameStatus Status { get; set; }
-    public IEnumerable<Core.Entities.Guess> Guesses { get; set; }
+    public IEnumerable<GuessResponse> Guesses { get; set; }
 
     public static HangmanResponse Create(Game game)
     {
@@ -16,9 +16,13 @@ public class HangmanResponse
         {
             GameId = game.Guid,
             WordProgress = game.GetWordProgress(),
-            RemainingGuesses = game.GetRemainingGuesses(),
-            Status = game.GetCurrentGameStatus(),
-            Guesses = game.Guesses
+            RemainingGuesses = game.RemainingGuesses,
+            Status = game.GameStatus,
+            Guesses = game.Guesses.Select(guess => new GuessResponse()
+            {
+                Character = guess,
+                WordContainsCharacter = game.CorrectWord.ContainsChar(guess)
+            })
         };
     }
 }

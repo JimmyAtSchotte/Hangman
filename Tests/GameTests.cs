@@ -1,24 +1,38 @@
 ﻿using Hangman.Core;
 using Hangman.Core.Entities;
+using Hangman.Core.Types;
 using NUnit.Framework;
 
 namespace Tests;
 
 [TestFixture]
-public class HangmanEngineTests
+public class GameTests
 {
+   [Test]
+    public void NewGame()
+    {
+        var game = new Game()
+        {
+            CorrectWord = (Word)"a"
+        };
+
+        Assert.AreEqual(GameStatus.KeepPlaying, game.GameStatus);
+        Assert.AreEqual(Constants.AllowedGuesses, game.RemainingGuesses);
+    }
+    
+    
     [TestCase('a')]
     [TestCase('A')]
     public void CorrectWordGuess(char guess)
     {
         var game = new Game()
         {
-            CorrectWord = "a"
+            CorrectWord = (Word)"a"
         };
 
         game.Guess(guess);
 
-        Assert.AreEqual(GameStatus.Victory, game.GetCurrentGameStatus());
+        Assert.AreEqual(GameStatus.Victory, game.GameStatus);
     }
 
     [Test]
@@ -26,12 +40,12 @@ public class HangmanEngineTests
     {
         var game = new Game()
         {
-            CorrectWord = "a"
+            CorrectWord = (Word)"a"
         };
 
         game.Guess('b');
 
-        Assert.AreEqual(GameStatus.KeepPlaying, game.GetCurrentGameStatus());
+        Assert.AreEqual(GameStatus.KeepPlaying, game.GameStatus);
     }
 
     [Test]
@@ -39,17 +53,16 @@ public class HangmanEngineTests
     {
         var game = new Game()
         {
-            CorrectWord = "ab"
+            CorrectWord = (Word)"ab"
         };
 
         game.Guess('b');
 
         var wordProgress = game.GetWordProgress();
-        var status = game.GetCurrentGameStatus();
 
         Assert.IsNull(wordProgress[0]);
         Assert.AreEqual('B', wordProgress[1]);
-        Assert.AreEqual(GameStatus.KeepPlaying, status);
+        Assert.AreEqual(GameStatus.KeepPlaying, game.GameStatus);
     }
 
     [Test]
@@ -57,7 +70,7 @@ public class HangmanEngineTests
     {
         var game = new Game()
         {
-            CorrectWord = "a"
+            CorrectWord = (Word)"a"
         };
 
         game.Guess('b');
@@ -71,7 +84,7 @@ public class HangmanEngineTests
         game.Guess('j');
         game.Guess('k');
 
-        Assert.AreEqual(GameStatus.GameOver, game.GetCurrentGameStatus());
+        Assert.AreEqual(GameStatus.GameOver, game.GameStatus);
         Assert.AreEqual(new char?[] { 'A' }, game.GetWordProgress());
     }
 
@@ -80,14 +93,14 @@ public class HangmanEngineTests
     {
         var game = new Game()
         {
-            CorrectWord = "a"
+            CorrectWord = (Word)"a"
         };
         
         game.Guess('b');
         game.Guess('b');
         game.Guess('B');
 
-        Assert.AreEqual(Constants.AllowedGuesses - 1, game.GetRemainingGuesses());
+        Assert.AreEqual(Constants.AllowedGuesses - 1, game.RemainingGuesses);
     }
 
     [Test]
@@ -95,16 +108,14 @@ public class HangmanEngineTests
     {
         var game = new Game()
         {
-            CorrectWord = "ac"
+            CorrectWord = (Word)"ac"
         };
         
         game.Guess('b');
         game.Guess('c');
         game.Guess('d');
 
-        Assert.AreEqual('B', game.Guesses.ElementAt(0).Character);
-        Assert.IsFalse(game.Guesses.ElementAt(0).WordContainsCharacter);
-        Assert.AreEqual('C', game.Guesses.ElementAt(1).Character);
-        Assert.IsTrue(game.Guesses.ElementAt(1).WordContainsCharacter);
+        Assert.IsTrue(game.Guesses.ElementAt(0).Equals('B'));
+        Assert.IsTrue(game.Guesses.ElementAt(1).Equals('C'));
     }
 }
